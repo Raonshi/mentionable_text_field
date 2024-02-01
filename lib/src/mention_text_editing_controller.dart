@@ -18,8 +18,7 @@ class MentionTextEditingController extends TextEditingController {
     TextStyle? mentionStyle,
   })  : _onMentionablesChanged = onMentionablesChanged,
         _storedMentionables = [],
-        _mentionStyle =
-            mentionStyle ?? const TextStyle(fontWeight: FontWeight.bold);
+        _mentionStyle = mentionStyle ?? const TextStyle(fontWeight: FontWeight.bold);
 
   /// Character that is excluded from keyboard
   /// to replace the mentions (not visible to users).
@@ -36,8 +35,7 @@ class MentionTextEditingController extends TextEditingController {
   String? _getMentionCandidate(String value) {
     const mentionCharacter = Constants.mentionCharacter;
     final indexCursor = selection.base.offset;
-    var indexAt =
-        value.substring(0, indexCursor).reversed.indexOf(mentionCharacter);
+    var indexAt = value.substring(0, indexCursor).reversed.indexOf(mentionCharacter);
     if (indexAt != -1) {
       if (value.length == 1) return mentionCharacter;
       indexAt = indexCursor - indexAt;
@@ -48,8 +46,7 @@ class MentionTextEditingController extends TextEditingController {
     return null;
   }
 
-  Queue<Mentionable> _mentionQueue() =>
-      Queue<Mentionable>.from(_storedMentionables);
+  Queue<Mentionable> _mentionQueue() => Queue<Mentionable>.from(_storedMentionables);
 
   void _addMention(String candidate, Mentionable mentionable) {
     final indexSelection = selection.base.offset;
@@ -57,9 +54,34 @@ class MentionTextEditingController extends TextEditingController {
     final indexInsertion = textPart.countChar(escapingMentionCharacter);
     _storedMentionables.insert(indexInsertion, mentionable);
     text = '${text.replaceAll(candidate, escapingMentionCharacter)} ';
-    selection =
-        TextSelection.collapsed(offset: indexSelection - candidate.length + 2);
+    selection = TextSelection.collapsed(offset: indexSelection - candidate.length + 2);
   }
+
+  // void _onFieldChanged(
+  //   String value,
+  //   List<Mentionable> mentionables,
+  // ) {
+  //   final candidate = _getMentionCandidate(value);
+  //   if (candidate != null) {
+  //     final isMentioningRegexp = RegExp(r'^@[a-zA-Z ]*$');
+  //     final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
+  //     if (mention != null) {
+  //       final perfectMatch = mentionables.firstWhereOrNull(
+  //         (element) =>
+  //             element.match(mention) && element.mentionLabel == mention,
+  //       );
+  //       if (perfectMatch != null) {
+  //         pickMentionable(perfectMatch);
+  //       } else {
+  //         final matchList =
+  //             mentionables.where((element) => element.match(mention)).toList();
+  //         _onMentionablesChanged(matchList);
+  //       }
+  //     }
+  //   } else {
+  //     _onMentionablesChanged([]);
+  //   }
+  // }
 
   void _onFieldChanged(
     String value,
@@ -67,18 +89,19 @@ class MentionTextEditingController extends TextEditingController {
   ) {
     final candidate = _getMentionCandidate(value);
     if (candidate != null) {
-      final isMentioningRegexp = RegExp(r'^@[a-zA-Z ]*$');
+      final isMentioningRegexp = RegExp(r'^@[a-z|A-Z|가-힣|0-9|_| ]+$');
       final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
       if (mention != null) {
-        final perfectMatch = mentionables.firstWhereOrNull(
-          (element) =>
-              element.match(mention) && element.mentionLabel == mention,
-        );
-        if (perfectMatch != null) {
-          pickMentionable(perfectMatch);
+        final Iterable<Mentionable> perfectMatches = mentionables.where((element) {
+          final bool isSameText = element.mentionLabel.toLowerCase() == mention;
+          final bool isMatch = element.match(mention);
+          return isSameText && isMatch;
+        });
+
+        if (perfectMatches.length == 1) {
+          pickMentionable(perfectMatches.first);
         } else {
-          final matchList =
-              mentionables.where((element) => element.match(mention)).toList();
+          final matchList = mentionables.where((element) => element.match(mention)).toList();
           _onMentionablesChanged(matchList);
         }
       }
@@ -93,8 +116,7 @@ class MentionTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final regexp =
-        RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)');
+    final regexp = RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)');
     // split result on "Hello ∞ where is ∞?" is: [Hello,∞, where is ,∞,?]
     final res = text.split(regexp);
     final mentionQueue = _mentionQueue();
