@@ -57,6 +57,44 @@ class MentionTextEditingController extends TextEditingController {
     selection = TextSelection.collapsed(offset: indexSelection - candidate.length + 2);
   }
 
+  // void _onFieldChanged(
+  //   String value,
+  //   List<Mentionable> mentionables,
+  // ) {
+  //   final candidate = _getMentionCandidate(value);
+  //   if (candidate != null) {
+  //     final isMentioningRegexp = RegExp(r'^@[a-z|A-Z|가-힣|0-9|_| ]+$');
+  //     final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
+  //     if (mention != null) {
+  //       // If there are some matches which contain the [mention] string,
+  //       // then show them.
+  //       final matches = mentionables.where((element) => element.match(mention)).toList();
+  //       if (matches.length > 1) {
+  //         _onMentionablesChanged(matches);
+  //         return;
+  //       }
+
+  //       // Detect perfect matches
+  //       final perfectMatches = matches.where((element) {
+  //         final isSameText = element.mentionLabel == mention;
+  //         final isMatch = element.match(mention);
+  //         return isSameText && isMatch;
+  //       });
+
+  //       if (perfectMatches.length == 1) {
+  //         // If there is only one perfect match, then pick it.
+  //         pickMentionable(perfectMatches.first);
+  //       } else {
+  //         // If there are no perfect matches, then show the matches.
+  //         final matchList = mentionables.where((element) => element.match(mention)).toList();
+  //         _onMentionablesChanged(matchList);
+  //       }
+  //     }
+  //   } else {
+  //     _onMentionablesChanged([]);
+  //   }
+  // }
+
   void _onFieldChanged(
     String value,
     List<Mentionable> mentionables,
@@ -66,26 +104,8 @@ class MentionTextEditingController extends TextEditingController {
       final isMentioningRegexp = RegExp(r'^@[a-z|A-Z|가-힣|0-9|_| ]+$');
       final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
       if (mention != null) {
-        // If there are some matches which contain the [mention] string,
-        // then show them.
-        final matches = mentionables.where((element) => element.match(mention)).toList();
-        if (matches.length > 1) {
-          _onMentionablesChanged(matches);
-          return;
-        }
-
-        // Detect perfect matches
-        final perfectMatches = matches.where((element) {
-          final isSameText = element.mentionLabel == mention;
-          final isMatch = element.match(mention);
-          return isSameText && isMatch;
-        });
-
-        if (perfectMatches.length == 1) {
-          // If there is only one perfect match, then pick it.
-          pickMentionable(perfectMatches.first);
-        } else {
-          // If there are no perfect matches, then show the matches.
+        final Iterable<Mentionable> matches = mentionables.where((element) => element.match(mention));
+        if (matches.isNotEmpty) {
           final matchList = mentionables.where((element) => element.match(mention)).toList();
           _onMentionablesChanged(matchList);
         }
