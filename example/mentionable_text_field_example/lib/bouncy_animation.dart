@@ -6,7 +6,7 @@ extension BouncyAnimation on Animation<double> {
   Animation<double> driveBouncy() => drive(
         TweenSequence([
           TweenSequenceItem(tween: Tween(begin: 0, end: 1.3), weight: 0.7),
-          TweenSequenceItem(tween: Tween(begin: 1.3, end: 1), weight: 0.3)
+          TweenSequenceItem(tween: Tween(begin: 1.3, end: 1), weight: 0.3),
         ]),
       );
 }

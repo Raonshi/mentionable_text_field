@@ -82,8 +82,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           mentionables: const [
                             MyUser('John Doe'),
                             MyUser('이순신'),
-                            MyUser('강감찬'),
-                            MyUser('홍길동'),
+                            MyUser('이순신1'),
+                            MyUser('이순신2'),
                             MyUser('이한결삼정솔탄복'),
                             MyUser('James Cameron'),
                             MyUser('QATester'),

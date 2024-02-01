@@ -40,7 +40,7 @@ class MentionableTextField extends StatefulWidget {
     this.mentionStyle,
     this.expands = false,
     this.readOnly = false,
-    this.toolbarOptions,
+    this.contextMenuBuilder,
     this.scribbleEnabled = true,
     this.enableIMEPersonalizedLearning = true,
     this.cursorWidth = 2.0,
@@ -205,7 +205,7 @@ class MentionableTextField extends StatefulWidget {
   /// If not set, select all and paste will default to be enabled. Copy and cut
   /// will be disabled if [obscureText] is true. If [readOnly] is true,
   /// paste and cut will be disabled regardless.
-  final ToolbarOptions? toolbarOptions;
+  final Widget Function(BuildContext, EditableTextState)? contextMenuBuilder;
 
   /// {@macro flutter.widgets.editableText.showCursor}
   final bool? showCursor;
@@ -520,7 +520,7 @@ class _MentionableTextFieldState extends State<MentionableTextField> {
       textCapitalization: widget.textCapitalization,
       textDirection: widget.textDirection,
       textInputAction: widget.textInputAction,
-      toolbarOptions: widget.toolbarOptions,
+      contextMenuBuilder: widget.contextMenuBuilder,
     );
   }
 }

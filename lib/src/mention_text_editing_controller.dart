@@ -46,7 +46,7 @@ class MentionTextEditingController extends TextEditingController {
     return null;
   }
 
-  Queue<Mentionable> _mentionQueue() => Queue<Mentionable>.from(_storedMentionables);
+  Queue<Mentionable> get mentionQueue => Queue<Mentionable>.from(_storedMentionables);
 
   void _addMention(String candidate, Mentionable mentionable) {
     final indexSelection = selection.base.offset;
@@ -76,7 +76,7 @@ class MentionTextEditingController extends TextEditingController {
 
         // Detect perfect matches
         final perfectMatches = matches.where((element) {
-          final isSameText = element.mentionLabel.toLowerCase() == mention.toLowerCase();
+          final isSameText = element.mentionLabel == mention;
           final isMatch = element.match(mention);
           return isSameText && isMatch;
         });
@@ -104,7 +104,6 @@ class MentionTextEditingController extends TextEditingController {
     final regexp = RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)');
     // split result on "Hello ∞ where is ∞?" is: [Hello,∞, where is ,∞,?]
     final res = text.split(regexp);
-    final mentionQueue = _mentionQueue();
     return TextSpan(
       style: style,
       children: res.map((e) {
@@ -137,7 +136,6 @@ class MentionTextEditingController extends TextEditingController {
   /// Get the real value of the field with the mentions transformed
   /// thanks to [Mentionable.buildMention].
   String buildMentionedValue() {
-    final mentionQueue = _mentionQueue();
     return text.replaceAllMapped(
       escapingMentionCharacter,
       (_) => mentionQueue.removeFirst().buildMention(),
