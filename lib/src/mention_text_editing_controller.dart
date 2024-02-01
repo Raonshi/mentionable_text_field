@@ -57,32 +57,6 @@ class MentionTextEditingController extends TextEditingController {
     selection = TextSelection.collapsed(offset: indexSelection - candidate.length + 2);
   }
 
-  // void _onFieldChanged(
-  //   String value,
-  //   List<Mentionable> mentionables,
-  // ) {
-  //   final candidate = _getMentionCandidate(value);
-  //   if (candidate != null) {
-  //     final isMentioningRegexp = RegExp(r'^@[a-zA-Z ]*$');
-  //     final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
-  //     if (mention != null) {
-  //       final perfectMatch = mentionables.firstWhereOrNull(
-  //         (element) =>
-  //             element.match(mention) && element.mentionLabel == mention,
-  //       );
-  //       if (perfectMatch != null) {
-  //         pickMentionable(perfectMatch);
-  //       } else {
-  //         final matchList =
-  //             mentionables.where((element) => element.match(mention)).toList();
-  //         _onMentionablesChanged(matchList);
-  //       }
-  //     }
-  //   } else {
-  //     _onMentionablesChanged([]);
-  //   }
-  // }
-
   void _onFieldChanged(
     String value,
     List<Mentionable> mentionables,
@@ -94,17 +68,15 @@ class MentionTextEditingController extends TextEditingController {
       if (mention != null) {
         // If there are some matches which contain the [mention] string,
         // then show them.
-        final matches = mentionables.where(
-          (element) => element.match(mention),
-        );
+        final matches = mentionables.where((element) => element.match(mention)).toList();
         if (matches.length > 1) {
-          _onMentionablesChanged(matches.toList());
+          _onMentionablesChanged(matches);
           return;
         }
 
         // Detect perfect matches
-        final perfectMatches = mentionables.where((element) {
-          final isSameText = element.mentionLabel.toLowerCase() == mention;
+        final perfectMatches = matches.where((element) {
+          final isSameText = element.mentionLabel.toLowerCase() == mention.toLowerCase();
           final isMatch = element.match(mention);
           return isSameText && isMatch;
         });
