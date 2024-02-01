@@ -87,7 +87,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             MyUser('이한결삼정솔탄복'),
                             MyUser('James Cameron'),
                             MyUser('QATester'),
-                            MyUser('QATester'),
+                            MyUser('QATester1'),
+                            MyUser('QATester1'),
+                            MyUser('QATester2'),
+                            MyUser('QATester3'),
                             MyUser('Qa_Test Manager')
                           ],
                           onMentionablesChanged: (mentionables) {
