@@ -92,15 +92,28 @@ class MentionTextEditingController extends TextEditingController {
       final isMentioningRegexp = RegExp(r'^@[a-z|A-Z|가-힣|0-9|_| ]+$');
       final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
       if (mention != null) {
-        final Iterable<Mentionable> perfectMatches = mentionables.where((element) {
-          final bool isSameText = element.mentionLabel.toLowerCase() == mention;
-          final bool isMatch = element.match(mention);
+        // If there are some matches which contain the [mention] string,
+        // then show them.
+        final matches = mentionables.where(
+          (element) => element.match(mention),
+        );
+        if (matches.length > 1) {
+          _onMentionablesChanged(matches.toList());
+          return;
+        }
+
+        // Detect perfect matches
+        final perfectMatches = mentionables.where((element) {
+          final isSameText = element.mentionLabel.toLowerCase() == mention;
+          final isMatch = element.match(mention);
           return isSameText && isMatch;
         });
 
         if (perfectMatches.length == 1) {
+          // If there is only one perfect match, then pick it.
           pickMentionable(perfectMatches.first);
         } else {
+          // If there are no perfect matches, then show the matches.
           final matchList = mentionables.where((element) => element.match(mention)).toList();
           _onMentionablesChanged(matchList);
         }
