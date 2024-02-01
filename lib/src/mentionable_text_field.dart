@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentionable_text_field/src/constants.dart';
-import 'package:mentionable_text_field/src/list_extension.dart';
 import 'package:mentionable_text_field/src/string_extension.dart';
 
 part 'mention_text_editing_controller.dart';
@@ -97,8 +96,7 @@ class MentionableTextField extends StatefulWidget {
           escapingMentionCharacter.length == 1,
           'escapingMentionCharacter should be a single character.',
         ),
-        enableInteractiveSelection =
-            enableInteractiveSelection ?? (!readOnly || !obscureText);
+        enableInteractiveSelection = enableInteractiveSelection ?? (!readOnly || !obscureText);
 
   /// A callback to retrieve the [TextField] controller when
   /// it's ready.
@@ -438,8 +436,7 @@ class MentionableTextField extends StatefulWidget {
 }
 
 class _MentionableTextFieldState extends State<MentionableTextField> {
-  late final MentionTextEditingController _controller =
-      MentionTextEditingController(
+  late final MentionTextEditingController _controller = MentionTextEditingController(
     escapingMentionCharacter: widget.escapingMentionCharacter,
     onMentionablesChanged: widget.onMentionablesChanged,
     mentionStyle: widget.mentionStyle,
