@@ -39,10 +39,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  final BehaviorSubject<List<Mentionable>> _mentionableStreamController =
-      BehaviorSubject.seeded([]);
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+  final BehaviorSubject<List<Mentionable>> _mentionableStreamController = BehaviorSubject.seeded([]);
   late final _animationController = AnimationController(vsync: this);
   late MentionTextEditingController _textFieldController;
   final _resultStreamController = StreamController<String>();
@@ -78,18 +76,22 @@ class _MyHomePageState extends State<MyHomePage>
                       child: Padding(
                         padding: const EdgeInsets.only(left: 12),
                         child: MentionableTextField(
-                          onControllerReady: (value) =>
-                              _textFieldController = value,
+                          onControllerReady: (value) => _textFieldController = value,
                           maxLines: 1,
                           onSubmitted: print,
                           mentionables: const [
                             MyUser('John Doe'),
-                            MyUser('Jeanne Aulas'),
-                            MyUser('Alexandre Dumas')
+                            MyUser('이순신'),
+                            MyUser('강감찬'),
+                            MyUser('홍길동'),
+                            MyUser('이한결삼정솔탄복'),
+                            MyUser('James Cameron'),
+                            MyUser('QATester'),
+                            MyUser('QATester'),
+                            MyUser('Qa_Test Manager')
                           ],
                           onMentionablesChanged: (mentionables) {
-                            final previousValue =
-                                _mentionableStreamController.value;
+                            final previousValue = _mentionableStreamController.value;
                             _mentionableStreamController.add(mentionables);
                             if (!listEquals(previousValue, mentionables)) {
                               _animationController
@@ -117,8 +119,7 @@ class _MyHomePageState extends State<MyHomePage>
                             if (!snapshot.hasData) return const SizedBox();
                             return MentionListWidget(
                               mentionables: snapshot.data!,
-                              pickMentionable:
-                                  _textFieldController.pickMentionable,
+                              pickMentionable: _textFieldController.pickMentionable,
                               animation: _animationController,
                             );
                           },
@@ -154,8 +155,7 @@ class _MyHomePageState extends State<MyHomePage>
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: () => _resultStreamController
-                        .add(_textFieldController.buildMentionedValue()),
+                    onPressed: () => _resultStreamController.add(_textFieldController.buildMentionedValue()),
                     style: ElevatedButton.styleFrom(
                       primary: const Color(0xff53828c),
                       fixedSize: const Size.fromWidth(200),
